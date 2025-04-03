@@ -1,14 +1,13 @@
 package com.certifdoc.repository;
 
-import java.util.Optional;
+import javax.management.relation.Role;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.certifdoc.entity.User;
-
-public class IUserRepository  extends JpaRepository<User, Long>{
-    
-	User findUserByEmail(String email);
-	User findByRole(Role role);
-	User findUserByFristName(String fristname);
-	User findUserByLastName(String lastname);
-
+@Repository
+public interface IUserRepository extends JpaRepository <User, Long> {
+    User findByFirstName(String firstname);
+    User findByLastName(String lastNname);
+   User findByRole(Role role);
 }

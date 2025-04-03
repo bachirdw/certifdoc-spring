@@ -1,12 +1,12 @@
 package com.certifdoc.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-
 import java.util.Date;
 
-import javax.management.relation.Role;
-//Classe avec getter et setter et constructeur
+/**
+ * Classe représentant un utilisateur dans l'application.
+ * Mappée à la table "user" en base de données.
+ */
 @Entity
 @Table(name = "user") // Nom de la table en minuscule pour respecter les standards SQL
 public class User {
@@ -14,57 +14,65 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user", nullable = false, unique = true)
-    private Long id;// ID de la base de données
+    private Long id; // Identifiant unique de l'utilisateur
 
     @Column(name = "firstname", nullable = false)
-    private String firstname;
+    private String firstname; // Prénom de l'utilisateur
 
     @Column(name = "lastname", nullable = false)
-    private String lastname;
+    private String lastname; // Nom de l'utilisateur
 
     @Column(name = "email", unique = true, nullable = false)
-    private String email;
+    private String email; // Adresse email unique
 
     @Column(name = "username", unique = true, nullable = false)
-    private String username;
+    private String username; // Nom d'utilisateur unique
 
     @Column(name = "password", nullable = false)
-    private String password;
+    private String password; // Mot de passe sécurisé
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
-    private Role role; // Exemple : ROLE_USER, ROLE_ADMIN
+    /**
+     * Relation Many-to-One entre User et Role.
+     * Un utilisateur a UN rôle, mais un rôle peut être attribué à plusieurs utilisateurs.
+     */
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role; // Rôle de l'utilisateur (ex: ROLE_USER, ROLE_ADMIN)
 
     @Column(name = "profile_image_url")
-    private String profileImageURL;
+    private String profileImageURL; // URL de l'image de profil
 
+    /**
+     * Liste des autorisations associées à l'utilisateur.
+     */
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "authority")
-    private String[] authorities; // Permissions (ex : "READ_PRIVILEGE", "EDIT_PRIVILEGE")
+    private String[] authorities; // Ex: "READ_PRIVILEGE", "EDIT_PRIVILEGE"
 
     @Column(name = "is_active", nullable = false)
-    private boolean isActive = true; // Pour activer ou désactiver un utilisateur
+    private boolean isActive = true; // Indique si l'utilisateur est actif
 
     @Column(name = "is_not_locked", nullable = false)
-    private boolean isNotLocked = true; // Pour bloquer ou débloquer un utilisateur
+    private boolean isNotLocked = true; // Indique si le compte est verrouillé ou non
 
     @Column(name = "last_login")
-    private Date lastLoginDate;
+    private Date lastLoginDate; // Date de la dernière connexion
 
     @Column(name = "join_date", nullable = false, updatable = false)
-    private Date joinDate = new Date();
+    private Date joinDate = new Date(); // Date d'inscription (non modifiable)
 
-    
+    /**
+     * Constructeur par défaut (nécessaire pour JPA).
+     */
+    public User() {}
 
-    // Constructeurs par défaut
-    public User() {
-    }
-
-    // Constructeurs avec tous les attributs
+    /**
+     * Constructeur avec tous les attributs.
+     */
     public User(Long id, String firstname, String lastname, String email, String username, String password, Role role,
-            String profileImageURL, String[] authorities, boolean isActive, boolean isNotLocked, Date lastLoginDate,
-            Date lastLoginDateDisplay, Date joinDate) {
+                String profileImageURL, String[] authorities, boolean isActive, boolean isNotLocked, Date lastLoginDate,
+                Date joinDate) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -79,9 +87,7 @@ public class User {
         this.lastLoginDate = lastLoginDate;
         this.joinDate = joinDate;
     }
-
-
-    // Getters et Setters all attributes
+// Getters et Setters pour chaque attribut
     public Long getId() {
         return id;
     }
@@ -186,5 +192,5 @@ public class User {
         this.joinDate = joinDate;
     }
 
-    
+
 }

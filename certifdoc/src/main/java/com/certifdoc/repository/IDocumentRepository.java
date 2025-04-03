@@ -3,6 +3,8 @@ package com.certifdoc.repository;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 import com.certifdoc.entity.Document;
 import com.certifdoc.exception.DocumentNotFoundException;
 /**
@@ -16,6 +18,7 @@ Fournit automatiquement des méthodes comme save(), findById(), findAll(), delet
  */
 
 // Interface pour gérer l'accès aux données des documents
+@Repository
 public interface IDocumentRepository extends JpaRepository<Document, Long> {
     // Méthode personnalisée pour trouver un document par titre
     Optional<Document> findByTitle(String title);
