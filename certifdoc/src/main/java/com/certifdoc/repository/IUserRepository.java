@@ -9,5 +9,6 @@ import com.certifdoc.entity.Role;
 public interface IUserRepository extends JpaRepository<User, Long> {
     User findByFirstname(String firstname);
     User findByLastname(String lastname);
+    User findByEmail(String email);
     User findByRole(Role role); // Assurez-vous que Role est bien une entité en base de données
 }

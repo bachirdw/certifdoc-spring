@@ -1,19 +1,22 @@
 package com.certifdoc.entity;
 
 import jakarta.persistence.*;
+
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Classe représentant un utilisateur dans l'application.
  * Mappée à la table "user" en base de données.
  */
 @Entity
-@Table(name = "user") // Nom de la table en minuscule pour respecter les standards SQL
+@Table(name = "utilisateur") // Nom de la table en minuscule pour respecter les standards SQL
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_user", nullable = false, unique = true)
+    @Column(name = "user_id", nullable = false, unique = true)
     private Long id; // Identifiant unique de l'utilisateur
 
     @Column(name = "firstname", nullable = false)
@@ -35,9 +38,15 @@ public class User {
      * Relation Many-to-One entre User et Role.
      * Un utilisateur a UN rôle, mais un rôle peut être attribué à plusieurs utilisateurs.
      */
-    @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role; // Rôle de l'utilisateur (ex: ROLE_USER, ROLE_ADMIN)
+    // @ManyToOne
+    // @JoinColumn(name = "id_role-user", nullable = false)
+    // private Role role; // Rôle de l'utilisateur (ex: ROLE_USER, ROLE_ADMIN)
+
+    @ManyToMany
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Collection<Role> role;
 
     @Column(name = "profile_image_url")
     private String profileImageURL; // URL de l'image de profil
@@ -70,7 +79,7 @@ public class User {
     /**
      * Constructeur avec tous les attributs.
      */
-    public User(Long id, String firstname, String lastname, String email, String username, String password, Role role,
+    public User(Long id, String firstname, String lastname, String email, String username, String password, Collection<Role> role,
                 String profileImageURL, String[] authorities, boolean isActive, boolean isNotLocked, Date lastLoginDate,
                 Date joinDate) {
         this.id = id;
@@ -136,11 +145,11 @@ public class User {
         this.password = password;
     }
 
-    public Role getRole() {
+    public Collection<Role> getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole( Collection<Role> role) {
         this.role = role;
     }
 
