@@ -19,7 +19,7 @@ Fournit automatiquement des méthodes comme save(), findById(), findAll(), delet
 
 // Interface pour gérer l'accès aux données des documents
 @Repository
-public interface IDocumentRepository extends JpaRepository<Document, Long> {
+public interface DocumentRepository extends JpaRepository<Document, Long> {
     // Méthode personnalisée pour trouver un document par titre
     Optional<Document> findByTitle(String title);
 

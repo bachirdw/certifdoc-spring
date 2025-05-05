@@ -3,7 +3,7 @@ package com.certifdoc.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.certifdoc.entity.Document;
-import com.certifdoc.repository.IDocumentRepository;
+import com.certifdoc.repository.DocumentRepository;
 import com.certifdoc.exception.DocumentNotFoundException;
 
 import java.util.List;
@@ -21,7 +21,7 @@ Facilite la maintenance, la réutilisation et les tests unitaires.
 public class DocumentService {
 
     @Autowired // pour instancier le repository automatiquement
-    private IDocumentRepository documentRepository;
+    private DocumentRepository documentRepository;
     // Méthode pour récupérer tous les documents
     public List<Document> getAllDocuments() {
         return documentRepository.findAll();

@@ -6,7 +6,7 @@ import com.certifdoc.entity.User;
 import com.certifdoc.entity.Role;
 
 @Repository
-public interface IUserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
     User findByFirstname(String firstname);
     User findByLastname(String lastname);
     User findByEmail(String email);
