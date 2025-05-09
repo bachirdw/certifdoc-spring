@@ -38,14 +38,18 @@ public class RegistrationLoginController {
             return ResponseEntity.badRequest().body("Email already exists");
         }
 
-User newUser = new User();
-newUser.setFirstname(user.getFirstname());
-newUser.setLastname(user.getLastname()); 
-newUser.setEmail(user.getEmail());
-newUser.setPassword(passwordEncoder.encode(user.getPassword())); // Mot de passe brut (non encodé ici, sera encodé plus tard)   
+    User newUser = new User();
+    newUser.setFirstname(user.getFirstname());
+    newUser.setLastname(user.getLastname()); 
+    newUser.setEmail(user.getEmail());
+    // Mot de passe brut (non encodé ici, sera encodé plus tard)   
+    newUser.setPassword(passwordEncoder.encode(user.getPassword())); 
+// Enregistrement de l'utilisateur dans la base de données
+    return ResponseEntity.ok(userRepository.save(newUser)); 
+    
 
-return ResponseEntity.ok(userRepository.save(newUser)); // Enregistrement de l'utilisateur dans la base de données
+    }
+            
 
-        }
-         
+
 }

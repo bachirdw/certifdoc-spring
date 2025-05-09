@@ -30,14 +30,18 @@ Sert à la persistance des données.
 @AllArgsConstructor
 //pour crer des objets automatiquement et les utilisé quand  on a besoin
 @Builder
+
 public class Document {
-// pour dire que id est la clé primaire
+
+    // pour dire que id est la clé primaire
     @Id
     // pour dire que id est auto incrémenté = génération automatique
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_document")
-    private Long id;
-// nullable = false pour dire que le titre est obligatoire
+
+    @Column(name = "idDocument")
+    private Long idDocument;
+
+    // nullable = false pour dire que le titre est obligatoire
     @Column(name = "title", nullable = false)
     private String title;
 
@@ -50,7 +54,7 @@ public class Document {
     @Column(name = "type")
     private String type;
 
-    @Column(name = "upload_date", nullable = false, updatable = false)
+    @Column(name = "upload_date", nullable = true, updatable = true)// true pour l'instant aprés changer false
     @Temporal(TemporalType.TIMESTAMP)
     private Date uploadDate = new Date();
 
@@ -67,5 +71,11 @@ public class Document {
     @Column(name = "file_hash")
     private String fileHash;
 
-    
+    @Column(name = "file_path")
+    private String filePath;
+
+    @ManyToOne(optional = true) // Un document peut exister sans audit
+@JoinColumn(name = "dossier_audit_id", nullable = true)
+private DossierAudit dossierAudit;
+
 }

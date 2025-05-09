@@ -22,7 +22,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false, unique = true)
-    private Long id; // Identifiant unique de l'utilisateur
+    private Long iduser; // Identifiant unique de l'utilisateur
 
     @Column(name = "firstname", nullable = false)
     private String firstname; // Prénom de l'utilisateur

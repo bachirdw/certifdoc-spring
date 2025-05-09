@@ -1,21 +1,28 @@
 package com.certifdoc.controller;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.certifdoc.entity.Document;
+import com.certifdoc.exception.DocumentNotFoundException;
 import com.certifdoc.service.DocumentService;
+
+import java.io.IOException;
+
 /**
  * Controller (API / Interface utilisateur)
 📌 Rôle :
@@ -41,9 +48,9 @@ public class DocumentController {
     }
 
     //  pour récupérer un document par ID
-    @GetMapping("/{id}")
-    public Document getDocumentById(@PathVariable Long id) {
-        return documentService.getDocumentById(id);
+    @GetMapping("/{idDocument}")
+    public Document getDocumentById(@PathVariable Long idDocument) {
+        return documentService.getDocumentById(idDocument);
     }
 
      //  pour ajouter un nouveau document
@@ -51,19 +58,43 @@ public class DocumentController {
      public Document addDocument(@RequestBody Document document) {
          return documentService.addDocument(document);
      }
-     // voir ytb 
-         @PostMapping("/upload")
-    public String uploadDocument(@RequestParam("file") MultipartFile file) {
-        try {
-            // Logique pour sauvegarder le fichier
-            String fileName = file.getOriginalFilename();
-            String storagePath = "C:/uploads/" + fileName; // Chemin où le fichier sera stocké
-            file.transferTo(new File(storagePath));
     
-            // Retourner un message de succès
-            return "Fichier téléchargé avec succès : " + fileName;
-        } catch (IOException e) {
-            throw new RuntimeException("Erreur lors du téléchargement du fichier", e);
+    @PutMapping("/{idDocument}")
+    public ResponseEntity<Document> updateDocument(@PathVariable Long idDocument, @RequestBody Document updatedDocument) {
+        try {
+            Document document = documentService.updateDocument(idDocument, updatedDocument);
+            return ResponseEntity.ok(document);
+        } catch (DocumentNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
     }
+
+     // pour supprimer un document par ID
+    @DeleteMapping("/{idDocument}")
+    public ResponseEntity<Void> deleteDocument(@PathVariable(name = "idDocument") Long documentId) {
+        try {
+            documentService.deleteDocumentById(documentId);
+            return ResponseEntity.noContent().build(); // 204 No Content = succès sans retour
+        } catch (DocumentNotFoundException e) {
+            return ResponseEntity.notFound().build(); // 404
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build(); // 500
+        }
+    }
+
+
+     
+     // téléverser un document
+     @PostMapping("/upload")
+     public ResponseEntity<String> uploadDocument(@RequestPart("file") MultipartFile file) {
+         if (file.isEmpty()) return ResponseEntity.badRequest().body("❌ Le fichier est vide !");
+     
+         try {
+             String path = documentService.saveFile(file);
+             return ResponseEntity.ok("✅ Fichier téléchargé avec succès à l'emplacement : " + path);
+         } catch (RuntimeException e) {
+             return ResponseEntity.internalServerError().body("⚠️ Erreur : " + e.getMessage());
+         }
+     }
+
 }

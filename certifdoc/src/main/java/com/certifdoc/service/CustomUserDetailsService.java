@@ -24,6 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+      
         // Méthode 1: Si findByEmail ne retourne pas un Optional<User>
         User user = userRepository.findByEmail(email);
         
@@ -42,4 +43,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             authorities
         );
     }
+
+    
 }

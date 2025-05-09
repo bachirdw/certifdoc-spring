@@ -1,0 +1,92 @@
+package com.certifdoc.controller;
+
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.certifdoc.entity.User;
+import com.certifdoc.service.UserService;
+
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping("/api/auth/")
+@RequiredArgsConstructor
+public class UserController {
+
+    private static final String USER_DELETED_SUCCESSFULLY = "User deleted successfully";
+
+    @Autowired
+    private UserService userService;
+
+    // pour afficher tout les utilisateurs
+    @GetMapping("list")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    //pour ajouter un utilisateur
+    @PostMapping("add")
+    public ResponseEntity<User> addNewUser(
+            @RequestParam("firstname") String firstname,
+            @RequestParam("lastname") String lastname,
+            @RequestParam("password") String password,
+            @RequestParam("email") String email,
+            @RequestParam("role") String role,
+            @RequestParam("active") String active,
+            @RequestParam("isNotLocked") String isNotLocked,
+            @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) {
+
+        User newUser = userService.addNewUser(firstname, lastname, password, email, role,
+                Boolean.parseBoolean(active), Boolean.parseBoolean(isNotLocked), profileImage);
+        return new ResponseEntity<>(newUser, HttpStatus.OK);
+    }
+
+    // pour  mettre à jour un utilisateur
+   @PutMapping("maj/{iduser}")
+public ResponseEntity<User> updateUser(@PathVariable("iduser") long iduser, @RequestBody User updatedUser) {
+    User user = userService.updateUser(iduser, updatedUser.getFirstname(), updatedUser.getLastname(),
+            updatedUser.getPassword(), updatedUser.getEmail(), updatedUser.getRole() != null ? updatedUser.getRole().name() : null,
+            updatedUser.isActive(), updatedUser.isNotLocked(), updatedUser.getProfileImageURL());
+
+    return new ResponseEntity<>(user, HttpStatus.OK);
+}
+    /*@PutMapping("maj/{iduser}")
+    public ResponseEntity<User> updateUser(
+        @PathVariable("iduser") long iduser,
+        @RequestParam("firstname") String firstname,
+        @RequestParam("lastname") String lastname,
+        @RequestParam("password") String password,
+        @RequestParam("email") String email,
+        @RequestParam("role") String role,
+        @RequestParam("active") String active,
+        @RequestParam("isNotLocked") String isNotLocked,
+        @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) {
+
+    User updatedUser = userService.updateUser(iduser, firstname, lastname, password, email, role,
+            Boolean.parseBoolean(active), Boolean.parseBoolean(isNotLocked), profileImage);
+
+    return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+}*/
+
+    //pour supprimer un utilisateur
+    @DeleteMapping("delete/{iduser}")
+    public ResponseEntity<String> deleteUser(@PathVariable("iduser") long iduser) {
+        userService.deleteUser(iduser);
+        return new ResponseEntity<>(USER_DELETED_SUCCESSFULLY + " ID: " + iduser, HttpStatus.OK);
+    }
+
+}
