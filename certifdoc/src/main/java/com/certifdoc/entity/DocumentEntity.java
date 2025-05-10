@@ -76,6 +76,6 @@ public class DocumentEntity {
 
     @ManyToOne(optional = true) // Un document peut exister sans audit
 @JoinColumn(name = "dossier_audit_id", nullable = true)
-private DossierAudit dossierAudit;
+private DossierAuditEntity dossierAudit;
 
 }

@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DossierAudit {
+public class DossierAuditEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

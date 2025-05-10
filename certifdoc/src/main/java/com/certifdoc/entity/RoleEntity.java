@@ -1,7 +1,7 @@
 package com.certifdoc.entity;
 
 
-public enum Role {
+public enum RoleEntity {
     ADMIN, // Administrateur
     FORMATEUR, 
     AUDITEUR 

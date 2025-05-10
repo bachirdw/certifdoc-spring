@@ -5,11 +5,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.certifdoc.entity.DocumentEntity;
+import com.certifdoc.entity.HistoriqueModificationEntity;
 import com.certifdoc.repository.DocumentRepository;
+import com.certifdoc.repository.HistoriqueModificationRepository;
 import com.certifdoc.exception.DocumentNotFoundException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 /**
  * Service (Logique métier)
@@ -25,8 +28,11 @@ Facilite la maintenance, la réutilisation et les tests unitaires.
 public class DocumentService {
 
     @Autowired // pour instancier le repository automatiquement
-
     private DocumentRepository documentRepository;
+
+    @Autowired
+    private HistoriqueModificationRepository historiqueRepository;
+
 
     // Méthode pour récupérer tous les documents
     public List<DocumentEntity> getAllDocuments() {
@@ -43,22 +49,32 @@ public class DocumentService {
     }
 
     // Méthode pour mettre à jour un document
-public DocumentEntity updateDocument(Long idDocument, DocumentEntity updatedDocument) {
-    DocumentEntity existingDocument = documentRepository.findById(idDocument)
-            .orElseThrow(() -> new DocumentNotFoundException("Document introuvable avec l'ID : " + idDocument));
-
-    existingDocument.setTitle(updatedDocument.getTitle());
-    existingDocument.setDescription(updatedDocument.getDescription());
-    existingDocument.setCategory(updatedDocument.getCategory());
-    existingDocument.setType(updatedDocument.getType());
-    existingDocument.setVersion(updatedDocument.getVersion());
-    existingDocument.setStorageUrl(updatedDocument.getStorageUrl());
-    existingDocument.setFileSize(updatedDocument.getFileSize());
-    existingDocument.setFileHash(updatedDocument.getFileHash());
-    existingDocument.setFilePath(updatedDocument.getFilePath());
-
-    return documentRepository.save(existingDocument);
-}
+    public DocumentEntity updateDocument(Long idDocument, DocumentEntity updatedDocument) {
+        DocumentEntity existingDocument = documentRepository.findById(idDocument)
+                .orElseThrow(() -> new DocumentNotFoundException("Document introuvable avec l'ID : " + idDocument));
+    
+        existingDocument.setTitle(updatedDocument.getTitle());
+        existingDocument.setDescription(updatedDocument.getDescription());
+        existingDocument.setCategory(updatedDocument.getCategory());
+        existingDocument.setType(updatedDocument.getType());
+        existingDocument.setVersion(updatedDocument.getVersion());
+        existingDocument.setStorageUrl(updatedDocument.getStorageUrl());
+        existingDocument.setFileSize(updatedDocument.getFileSize());
+        existingDocument.setFileHash(updatedDocument.getFileHash());
+        existingDocument.setFilePath(updatedDocument.getFilePath());
+    
+        DocumentEntity savedDocument = documentRepository.save(existingDocument);
+    
+        // ✅ Enregistrement de l’historique
+        HistoriqueModificationEntity historique = new HistoriqueModificationEntity();
+        historique.setModificationDate(new Date());
+        historique.setChangeDescription("Mise à jour du document : " + savedDocument.getTitle());
+        historique.setDocument(savedDocument);
+        historiqueRepository.save(historique);
+    
+        return savedDocument;
+    }
+    
     // Méthode pour supprimer un document par ID
     public void deleteDocumentById(Long idDocument) {
         DocumentEntity document = documentRepository.findById(idDocument)

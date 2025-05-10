@@ -1,6 +1,6 @@
 package com.certifdoc.controller;
 
-import com.certifdoc.entity.User;
+import com.certifdoc.entity.UserEntity;
 import com.certifdoc.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -21,9 +21,9 @@ public class RegistrationLoginController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody User user) {
+    public ResponseEntity<?> loginUser(@RequestBody UserEntity user) {
         // Vérification de l'existence de l'utilisateur par email et mot de passe
-        User existingUser = userRepository.findByEmail(user.getEmail());
+        UserEntity existingUser = userRepository.findByEmail(user.getEmail());
         if (existingUser == null || !passwordEncoder.matches(user.getPassword(), existingUser.getPassword())) {
             return ResponseEntity.badRequest().body("Invalid email or password");
         }
@@ -32,13 +32,13 @@ public class RegistrationLoginController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
+    public ResponseEntity<?> registerUser(@RequestBody UserEntity user) {
         // Vérification de l'existence de l'utilisateur par email
         if (userRepository.findByEmail(user.getEmail())!= null) {
             return ResponseEntity.badRequest().body("Email already exists");
         }
 
-    User newUser = new User();
+    UserEntity newUser = new UserEntity();
     newUser.setFirstname(user.getFirstname());
     newUser.setLastname(user.getLastname()); 
     newUser.setEmail(user.getEmail());

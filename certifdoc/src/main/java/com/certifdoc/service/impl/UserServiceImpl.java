@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.certifdoc.entity.Role;
-import com.certifdoc.entity.User;
+import com.certifdoc.entity.RoleEntity;
+import com.certifdoc.entity.UserEntity;
 import com.certifdoc.repository.UserRepository;
 import com.certifdoc.service.UserService;
 
@@ -20,30 +20,30 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public List<User> getUsers() {
+    public List<UserEntity> getUsers() {
         return userRepository.findAll();
     }
 
     @Override
-    public User findUserByLastname(String lastname) {
+    public UserEntity findUserByLastname(String lastname) {
         return userRepository.findByFirstname(lastname);
     }
 
     @Override
-    public User findUserByEmail(String email) {
+    public UserEntity findUserByEmail(String email) {
         return userRepository.findByLastname(email);
     }
 
 //pour ajouter un utilisateur
     @Override
-    public User addNewUser(String firstname, String lastname, String password, String email, String role,
+    public UserEntity addNewUser(String firstname, String lastname, String password, String email, String role,
             boolean isActive, boolean isNotLocked, MultipartFile profileImage) {
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setFirstname(firstname);
         user.setLastname(lastname);
         user.setPassword(password);
         user.setEmail(email);
-        user.setRole(Role.valueOf(role.toUpperCase())); // Vérification du rôle
+        user.setRole(RoleEntity.valueOf(role.toUpperCase())); // Vérification du rôle
         user.setActive(isActive);
         user.setNotLocked(isNotLocked);
         return userRepository.save(user);
@@ -51,18 +51,18 @@ public class UserServiceImpl implements UserService {
 
 // pour mettre ajouter un utilisateur
     @Override
-    public User updateUser(long iduser, String firstname, String lastname, String password, String email, String role,
+    public UserEntity updateUser(long iduser, String firstname, String lastname, String password, String email, String role,
             boolean isActive, boolean isNotLocked, String profileImage) {
-        Optional<User> optionalUser = userRepository.findById(iduser);
+        Optional<UserEntity> optionalUser = userRepository.findById(iduser);
         if (!optionalUser.isPresent()) {
             throw new RuntimeException("Utilisateur avec l'ID " + iduser + " non trouvé !");
         }
-        User user = optionalUser.get();
+        UserEntity user = optionalUser.get();
         user.setFirstname(firstname);
         user.setLastname(lastname);
         user.setPassword(password);
         user.setEmail(email);
-        user.setRole(Role.valueOf(role.toUpperCase()));
+        user.setRole(RoleEntity.valueOf(role.toUpperCase()));
         user.setActive(isActive);
         user.setNotLocked(isNotLocked);
         return userRepository.save(user);

@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import com.certifdoc.entity.User;
+import com.certifdoc.entity.UserEntity;
 import com.certifdoc.repository.UserRepository;
 
 import lombok.Data;
@@ -26,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
       
         // Méthode 1: Si findByEmail ne retourne pas un Optional<User>
-        User user = userRepository.findByEmail(email);
+        UserEntity user = userRepository.findByEmail(email);
         
         if (user == null) {
             throw new UsernameNotFoundException("Utilisateur non trouvé avec l'email: " + email);

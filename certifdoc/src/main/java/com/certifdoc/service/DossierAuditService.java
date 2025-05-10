@@ -1,7 +1,7 @@
 package com.certifdoc.service;
 
 import com.certifdoc.entity.DocumentEntity;
-import com.certifdoc.entity.DossierAudit;
+import com.certifdoc.entity.DossierAuditEntity;
 import com.certifdoc.exception.DossierAuditNotFoundException;
 import com.certifdoc.repository.DocumentRepository;
 import com.certifdoc.repository.DossierAuditRepository;
@@ -27,29 +27,35 @@ public class DossierAuditService {
     @Autowired
     private DocumentRepository documentRepository;
 
-    public List<DossierAudit> getAllDossiers() {
+    public List<DossierAuditEntity> getAllDossiers() {
         return dossierAuditRepository.findAll();
     }
 
-    public DossierAudit getDossierById(Long idDossierAudit) {
+    public DossierAuditEntity getDossierById(Long idDossierAudit) {
         return dossierAuditRepository.findById(idDossierAudit)
                 .orElseThrow(() -> new DossierAuditNotFoundException("❌ Dossier introuvable avec l'ID : " + idDossierAudit));
     }
 
-    public DossierAudit updateDossier(Long idDossierAudit, DossierAudit updatedDossier) {
-        DossierAudit existingDossier = getDossierById(idDossierAudit);
+    public DossierAuditEntity updateDossier(Long idDossierAudit, DossierAuditEntity updatedDossier) {
+        DossierAuditEntity existingDossier = getDossierById(idDossierAudit);
         existingDossier.setStatut(updatedDossier.getStatut());
         existingDossier.setUrlPdf(updatedDossier.getUrlPdf());
         return dossierAuditRepository.save(existingDossier);
     }
 
     public void deleteDossierById(Long id) {
-        DossierAudit dossierAudit = getDossierById(id);
+        DossierAuditEntity dossierAudit = getDossierById(id);
         dossierAuditRepository.delete(dossierAudit);
     }
-//methode pour vérifier si le dossier d'audit est complet
+
+    /**
+     * ✅ UC_VerifyCompleteness - Vérification complétude des documents
+     */
+
     public boolean verifyDocumentCompleteness(List<Long> documentIds) {
         List<DocumentEntity> documents = documentRepository.findAllById(documentIds);
+        //  méthode vérifie **si les types des documents sélectionnés contiennent les 3 types EXACTS, sinon elle retourne false.
+       // faudra rendre plus flexible pour accepter d'autres types de documents
         List<String> requiredTypes = List.of("Rapport", "Certificat", "Justificatif");
 
         Set<String> typesPresents = documents.stream()
@@ -64,7 +70,8 @@ public class DossierAuditService {
      * ✅ Méthode principale pour créer un dossier d'audit,
      * associer des documents et générer le PDF directement en BDD (en byte[]).
      */
-    public DossierAudit generateDossierAuditWithPdfInDb(DossierAudit dossierAudit, List<Long> documentIds) {
+    public DossierAuditEntity generateDossierAuditWithPdfInDb(DossierAuditEntity dossierAudit, List<Long> documentIds) {
+         // Étape 4 : Ajout des documents
         List<DocumentEntity> documentEntities = documentRepository.findAllById(documentIds);
         dossierAudit.setDocuments(documentEntities);
         dossierAudit.setCreationDate(new Date());
@@ -81,12 +88,14 @@ public class DossierAuditService {
 
         return dossierAuditRepository.save(dossierAudit);
     }
-
-    private byte[] generatePdfContent(DossierAudit dossierAudit) throws IOException {
+ /**
+     * Génère un PDF structuré selon le format Qualiopi
+     */
+    private byte[] generatePdfContent(DossierAuditEntity dossierAudit) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Document document = new Document();
         PdfWriter.getInstance(document, byteArrayOutputStream);
-
+// Structure du document
         document.open();
         document.add(new Paragraph("📘 Dossier d'Audit Qualiopi"));
         document.add(new Paragraph("ID Dossier: " + dossierAudit.getIdDossierAudit()));
@@ -101,7 +110,7 @@ public class DossierAuditService {
         return byteArrayOutputStream.toByteArray();
     }
 
-    private void sendMissingDocumentsNotification(DossierAudit dossierAudit) {
+    private void sendMissingDocumentsNotification(DossierAuditEntity dossierAudit) {
         System.out.println("📣 Dossier incomplet - Notification fictive (à implémenter)");
     }
 }

@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.certifdoc.dto.DocumentIdListDTO;
-import com.certifdoc.entity.DossierAudit;
+import com.certifdoc.entity.DossierAuditEntity;
 import com.certifdoc.exception.DossierAuditNotFoundException;
 import com.certifdoc.service.DossierAuditService;
 
@@ -33,15 +33,15 @@ public class DossierAuditController {
 
     // 📌 Récupérer tous les dossiers d’audit
     @GetMapping
-    public List<DossierAudit> getAllDossiers() {
+    public List<DossierAuditEntity> getAllDossiers() {
         return dossierAuditService.getAllDossiers();
     }
 
     // 📌 Récupérer un dossier d’audit par ID
     @GetMapping("/{idDossierAudit}")
-    public ResponseEntity<DossierAudit> getDossierById(@PathVariable Long idDossierAudit) {
+    public ResponseEntity<DossierAuditEntity> getDossierById(@PathVariable Long idDossierAudit) {
         try {
-            DossierAudit dossier = dossierAuditService.getDossierById(idDossierAudit);
+            DossierAuditEntity dossier = dossierAuditService.getDossierById(idDossierAudit);
             return ResponseEntity.ok(dossier)   ;
         } catch (DossierAuditNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -50,9 +50,9 @@ public class DossierAuditController {
     
     //  Mettre à jour un dossier d’audit
     @PutMapping("/{idDossierAudit}")
-    public ResponseEntity<DossierAudit> updateDossier(@PathVariable Long idDossierAudit, @RequestBody DossierAudit updatedDossier) {
+    public ResponseEntity<DossierAuditEntity> updateDossier(@PathVariable Long idDossierAudit, @RequestBody DossierAuditEntity updatedDossier) {
         try {
-            DossierAudit dossier = dossierAuditService.updateDossier(idDossierAudit, updatedDossier);
+            DossierAuditEntity dossier = dossierAuditService.updateDossier(idDossierAudit, updatedDossier);
             return ResponseEntity.ok(dossier);
         } catch (DossierAuditNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -91,9 +91,9 @@ public class DossierAuditController {
             }
     
             //  Étape 2 : Création d’un objet DossierAudit vide
-            DossierAudit dossier = new DossierAudit();
+            DossierAuditEntity dossier = new DossierAuditEntity();
             // Étape 3 : Génération complète (sauvegarde, PDF, URL)
-            DossierAudit generatedDossier = dossierAuditService.generateDossierAuditWithPdfInDb(dossier, documentIds);
+            DossierAuditEntity generatedDossier = dossierAuditService.generateDossierAuditWithPdfInDb(dossier, documentIds);
             return ResponseEntity.ok(generatedDossier);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Erreur lors de la génération du dossier : " + e.getMessage());
@@ -104,7 +104,7 @@ public class DossierAuditController {
     @GetMapping("/{idDossierAudit}/download")
 public ResponseEntity<byte[]> downloadPdf(@PathVariable Long idDossierAudit) {
     try {
-        DossierAudit dossier = dossierAuditService.getDossierById(idDossierAudit);
+        DossierAuditEntity dossier = dossierAuditService.getDossierById(idDossierAudit);
         byte[] pdfContent = dossier.getPdfContent();
 
         if (pdfContent == null) {

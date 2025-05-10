@@ -17,7 +17,7 @@ import java.util.List;
 @Entity
 @Table(name = "utilisateur") // Nom de la table en minuscule pour respecter les standards SQL
 @Data
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +36,7 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password; // Mot de passe sécurisé
 
-    private Role role;
+    private RoleEntity role;
 /* 
     @ManyToOne
     @JoinTable(name = "user_role",

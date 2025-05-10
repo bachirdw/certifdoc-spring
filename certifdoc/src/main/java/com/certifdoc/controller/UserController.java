@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.certifdoc.entity.User;
+import com.certifdoc.entity.UserEntity;
 import com.certifdoc.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -33,14 +33,14 @@ public class UserController {
 
     // pour afficher tout les utilisateurs
     @GetMapping("list")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getUsers();
+    public ResponseEntity<List<UserEntity>> getAllUsers() {
+        List<UserEntity> users = userService.getUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     //pour ajouter un utilisateur
     @PostMapping("add")
-    public ResponseEntity<User> addNewUser(
+    public ResponseEntity<UserEntity> addNewUser(
             @RequestParam("firstname") String firstname,
             @RequestParam("lastname") String lastname,
             @RequestParam("password") String password,
@@ -50,15 +50,15 @@ public class UserController {
             @RequestParam("isNotLocked") String isNotLocked,
             @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) {
 
-        User newUser = userService.addNewUser(firstname, lastname, password, email, role,
+        UserEntity newUser = userService.addNewUser(firstname, lastname, password, email, role,
                 Boolean.parseBoolean(active), Boolean.parseBoolean(isNotLocked), profileImage);
         return new ResponseEntity<>(newUser, HttpStatus.OK);
     }
 
     // pour  mettre à jour un utilisateur
    @PutMapping("maj/{iduser}")
-public ResponseEntity<User> updateUser(@PathVariable("iduser") long iduser, @RequestBody User updatedUser) {
-    User user = userService.updateUser(iduser, updatedUser.getFirstname(), updatedUser.getLastname(),
+public ResponseEntity<UserEntity> updateUser(@PathVariable("iduser") long iduser, @RequestBody UserEntity updatedUser) {
+    UserEntity user = userService.updateUser(iduser, updatedUser.getFirstname(), updatedUser.getLastname(),
             updatedUser.getPassword(), updatedUser.getEmail(), updatedUser.getRole() != null ? updatedUser.getRole().name() : null,
             updatedUser.isActive(), updatedUser.isNotLocked(), updatedUser.getProfileImageURL());
 
