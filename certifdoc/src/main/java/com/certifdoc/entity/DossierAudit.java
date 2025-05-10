@@ -28,10 +28,15 @@ public class DossierAudit {
     private String urlPdf; // URL du fichier PDF du dossier
  
     @OneToMany(mappedBy = "dossierAudit", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Document> documents;
+    private List<DocumentEntity> documents;
 
-public void setDocuments(List<Document> documents) {
+public void setDocuments(List<DocumentEntity> documents) {
     this.documents = documents;
 }
+
+@Lob
+@Column(name = "pdf_content", columnDefinition = "LONGBLOB")
+private byte[] pdfContent;
+
     
 }

@@ -31,7 +31,7 @@ Sert à la persistance des données.
 //pour crer des objets automatiquement et les utilisé quand  on a besoin
 @Builder
 
-public class Document {
+public class DocumentEntity {
 
     // pour dire que id est la clé primaire
     @Id

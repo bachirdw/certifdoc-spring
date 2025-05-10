@@ -47,13 +47,7 @@ public class DossierAuditController {
             return ResponseEntity.notFound().build();
         }
     }
-
-    // 📌 Ajouter un dossier d’audit
-    @PostMapping
-    public DossierAudit addDossier(@RequestBody DossierAudit dossierAudit) {
-        return dossierAuditService.addDossier(dossierAudit);
-    }
-
+    
     //  Mettre à jour un dossier d’audit
     @PutMapping("/{idDossierAudit}")
     public ResponseEntity<DossierAudit> updateDossier(@PathVariable Long idDossierAudit, @RequestBody DossierAudit updatedDossier) {
@@ -77,17 +71,54 @@ public class DossierAuditController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    
-    //  Générer un dossier d’audit à partir de documents
+
+    //  Générer un dossier d’audit
     @PostMapping("/generate")
-    public ResponseEntity<DossierAudit> generateDossierAudit(@RequestBody DocumentIdListDTO request) {
-        DossierAudit dossierAudit = dossierAuditService.generateDossierAudit(request.getDocumentIds());
-        return ResponseEntity.ok(dossierAudit);
+    public ResponseEntity<?> generateDossierAudit(@RequestBody DocumentIdListDTO request) {
+        List<Long> documentIds = request.getDocumentIds();
+    
+        // 🛑 Vérification basique
+        if (documentIds == null || documentIds.isEmpty()) {
+            return ResponseEntity.badRequest().body("Aucun document sélectionné.");
+        }
+    
+        try {
+            //  Étape 1 : Vérification de complétude
+            boolean isComplete = dossierAuditService.verifyDocumentCompleteness(documentIds);
+    
+            if (!isComplete) {
+                return ResponseEntity.badRequest().body("❌ Documents manquants. Veuillez compléter le dossier.");
+            }
+    
+            //  Étape 2 : Création d’un objet DossierAudit vide
+            DossierAudit dossier = new DossierAudit();
+            // Étape 3 : Génération complète (sauvegarde, PDF, URL)
+            DossierAudit generatedDossier = dossierAuditService.generateDossierAuditWithPdfInDb(dossier, documentIds);
+            return ResponseEntity.ok(generatedDossier);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erreur lors de la génération du dossier : " + e.getMessage());
+        }
     }
-    //
-    @GetMapping("/pdf/download/{idDossierAudit}")
-    public void downloadDossierAuditPDF(@PathVariable Long id, HttpServletResponse response) throws IOException {
-        dossierAuditService.generateAuditReport(id, response);
+    
+    //Exposer une route de téléchargement du PDF dans le DossierAuditController
+    @GetMapping("/{idDossierAudit}/download")
+public ResponseEntity<byte[]> downloadPdf(@PathVariable Long idDossierAudit) {
+    try {
+        DossierAudit dossier = dossierAuditService.getDossierById(idDossierAudit);
+        byte[] pdfContent = dossier.getPdfContent();
+
+        if (pdfContent == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=DossierAudit_" + dossier.getIdDossierAudit() + ".pdf")
+                .header("Content-Type", "application/pdf")
+                .body(pdfContent);
+    } catch (DossierAuditNotFoundException e) {
+        return ResponseEntity.notFound().build();
     }
+}
+
 
 }

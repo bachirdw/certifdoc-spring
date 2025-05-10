@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.certifdoc.entity.Document;
+import com.certifdoc.entity.DocumentEntity;
 import com.certifdoc.exception.DocumentNotFoundException;
 /**
  *  Repository (Accès aux données)
@@ -17,13 +17,13 @@ Fournit automatiquement des méthodes comme save(), findById(), findAll(), delet
 
 // Interface pour gérer l'accès aux données des documents
 @Repository
-public interface DocumentRepository extends JpaRepository<Document, Long> {
+public interface DocumentRepository extends JpaRepository<DocumentEntity, Long> {
 
     // Méthode personnalisée pour trouver un document par titre
-    Optional<Document> findByTitle(String title);
+    Optional<DocumentEntity> findByTitle(String title);
 
     // Méthode pour récupérer un document par ID avec gestion d'exception
-    default Document getDocumentById(Long idDocument) {
+    default DocumentEntity getDocumentById(Long idDocument) {
         return findById(idDocument)
             .orElseThrow(() -> new DocumentNotFoundException("Document introuvable avec l'ID : " + idDocument));
     }

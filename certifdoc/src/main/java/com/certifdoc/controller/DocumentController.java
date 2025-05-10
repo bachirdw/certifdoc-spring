@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.certifdoc.entity.Document;
+import com.certifdoc.entity.DocumentEntity;
 import com.certifdoc.exception.DocumentNotFoundException;
 import com.certifdoc.service.DocumentService;
 
@@ -43,26 +43,26 @@ public class DocumentController {
 
     //  pour récupérer tous les documents
     @GetMapping
-    public List<Document> getAllDocuments() {
+    public List<DocumentEntity> getAllDocuments() {
         return documentService.getAllDocuments();
     }
 
     //  pour récupérer un document par ID
     @GetMapping("/{idDocument}")
-    public Document getDocumentById(@PathVariable Long idDocument) {
+    public DocumentEntity getDocumentById(@PathVariable Long idDocument) {
         return documentService.getDocumentById(idDocument);
     }
 
      //  pour ajouter un nouveau document
      @PostMapping
-     public Document addDocument(@RequestBody Document document) {
+     public DocumentEntity addDocument(@RequestBody DocumentEntity document) {
          return documentService.addDocument(document);
      }
     
     @PutMapping("/{idDocument}")
-    public ResponseEntity<Document> updateDocument(@PathVariable Long idDocument, @RequestBody Document updatedDocument) {
+    public ResponseEntity<DocumentEntity> updateDocument(@PathVariable Long idDocument, @RequestBody DocumentEntity updatedDocument) {
         try {
-            Document document = documentService.updateDocument(idDocument, updatedDocument);
+            DocumentEntity document = documentService.updateDocument(idDocument, updatedDocument);
             return ResponseEntity.ok(document);
         } catch (DocumentNotFoundException e) {
             return ResponseEntity.notFound().build();

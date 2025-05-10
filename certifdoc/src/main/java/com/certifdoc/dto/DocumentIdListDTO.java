@@ -2,8 +2,7 @@ package com.certifdoc.dto;
 
 import java.util.List;
 
-import lombok.Data;
-@Data
+
 public class DocumentIdListDTO {
     private List<Long> documentIds;
 

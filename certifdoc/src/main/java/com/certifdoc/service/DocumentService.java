@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.certifdoc.entity.Document;
+import com.certifdoc.entity.DocumentEntity;
 import com.certifdoc.repository.DocumentRepository;
 import com.certifdoc.exception.DocumentNotFoundException;
 
@@ -29,22 +29,22 @@ public class DocumentService {
     private DocumentRepository documentRepository;
 
     // Méthode pour récupérer tous les documents
-    public List<Document> getAllDocuments() {
+    public List<DocumentEntity> getAllDocuments() {
         return documentRepository.findAll();
     }
     // Méthode pour récupérer un document par ID
-    public Document getDocumentById(Long idDocument) {
+    public DocumentEntity getDocumentById(Long idDocument) {
         return documentRepository.findById(idDocument)
                 .orElseThrow(() -> new DocumentNotFoundException("Document introuvable avec l'ID : " + idDocument));
     }  
     // Méthode pour ajouter  un nouveau document
-    public Document addDocument(Document document) {
+    public DocumentEntity addDocument(DocumentEntity document) {
         return documentRepository.save(document);
     }
 
     // Méthode pour mettre à jour un document
-public Document updateDocument(Long idDocument, Document updatedDocument) {
-    Document existingDocument = documentRepository.findById(idDocument)
+public DocumentEntity updateDocument(Long idDocument, DocumentEntity updatedDocument) {
+    DocumentEntity existingDocument = documentRepository.findById(idDocument)
             .orElseThrow(() -> new DocumentNotFoundException("Document introuvable avec l'ID : " + idDocument));
 
     existingDocument.setTitle(updatedDocument.getTitle());
@@ -61,7 +61,7 @@ public Document updateDocument(Long idDocument, Document updatedDocument) {
 }
     // Méthode pour supprimer un document par ID
     public void deleteDocumentById(Long idDocument) {
-        Document document = documentRepository.findById(idDocument)
+        DocumentEntity document = documentRepository.findById(idDocument)
                 .orElseThrow(() -> new RuntimeException("Document introuvable avec l'ID : " + idDocument));
         
         documentRepository.delete(document);
@@ -81,7 +81,7 @@ public Document updateDocument(Long idDocument, Document updatedDocument) {
             file.transferTo(destinationFile);
     
             // Sauvegarde en base
-            Document doc = new Document();
+            DocumentEntity doc = new DocumentEntity();
             doc.setTitle(fileName); // Ou une autre logique si besoin
             doc.setFilePath(storagePath);
             documentRepository.save(doc);
