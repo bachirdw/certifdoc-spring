@@ -1,7 +1,7 @@
 package com.certifdoc.controller;
 
 import com.certifdoc.entity.LogEntity;
-import com.certifdoc.service.LogEntityService;
+import com.certifdoc.service.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public class LogController {
 
     @Autowired
-    private LogEntityService logService;
+    private LogService logService;
 
     // Récupérer tous les logs
     @GetMapping

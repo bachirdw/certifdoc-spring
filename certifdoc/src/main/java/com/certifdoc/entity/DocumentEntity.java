@@ -58,7 +58,6 @@ public class DocumentEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date uploadDate = new Date();
 
-
     @Column(name = "version")
     private String version;
 
@@ -74,8 +73,35 @@ public class DocumentEntity {
     @Column(name = "file_path")
     private String filePath;
 
-    @ManyToOne(optional = true) // Un document peut exister sans audit
-@JoinColumn(name = "dossier_audit_id", nullable = true)
-private DossierAuditEntity dossierAudit;
+
+    //  Relation  chaque document appartient à un utilisateur
+    @ManyToOne
+    @JoinColumn(name = "idUser", nullable = true)
+    private UserEntity utilisateur;
+
+    //  Relation : chaque document appartient à une catégorie
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idCategorie")
+    private CategorieEntity categorie;
+
+    //  un document peut avoir plusieurs audits
+    @ManyToOne
+    @JoinColumn(name = "idDossierAudit")
+    private DossierAuditEntity dossierAudit;
+
+    //  Historique des modifications (One-to-Many)
+    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
+    private List<HistoriqueModificationEntity> historiqueModifications;
+
+    // Relation Many-to-Many avec mots-clés via table de jointure
+    @ManyToMany
+    @JoinTable(
+        name = "DOCUMENT_KEYWORD",
+        joinColumns = @JoinColumn(name = "idDocument"),
+        inverseJoinColumns = @JoinColumn(name = "idKeyword")
+    )
+    private List<KeywordEntity> keywords;
+
 
 }
+

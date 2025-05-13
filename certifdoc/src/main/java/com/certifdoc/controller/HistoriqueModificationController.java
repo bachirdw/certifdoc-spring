@@ -32,7 +32,7 @@ public class HistoriqueModificationController {
     }
 
     // 🔍 Obtenir un historique par son ID
-    @GetMapping("/{id}")
+    @GetMapping("/{idHistory}")
     public ResponseEntity<HistoriqueModificationEntity> getHistoriqueById(@PathVariable Long id) {
         try {
             HistoriqueModificationEntity historique = historiqueService.getHistoriqueById(id);
@@ -49,7 +49,7 @@ public class HistoriqueModificationController {
     }
 
     // 🔁 Modifier un historique existant
-    @PutMapping("/{id}")
+    @PutMapping("/{idHistory}")
     public ResponseEntity<HistoriqueModificationEntity> updateHistorique(
             @PathVariable Long id,
             @RequestBody HistoriqueModificationDTO dto) {
@@ -62,7 +62,7 @@ public class HistoriqueModificationController {
     }
 
     // ❌ Supprimer un historique
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{idHistory}")
     public ResponseEntity<Void> deleteHistorique(@PathVariable Long id) {
         try {
             historiqueService.deleteHistorique(id);

@@ -48,39 +48,32 @@ public class UserController {
             @RequestParam("role") String role,
             @RequestParam("active") String active,
             @RequestParam("isNotLocked") String isNotLocked,
-            @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) {
+            @RequestParam(value = "profileImage", required = false) MultipartFile profileImage,
+            @RequestParam(value = "idFormation", required = false) Long idFormation) {
 
         UserEntity newUser = userService.addNewUser(firstname, lastname, password, email, role,
-                Boolean.parseBoolean(active), Boolean.parseBoolean(isNotLocked), profileImage);
+                Boolean.parseBoolean(active), Boolean.parseBoolean(isNotLocked), profileImage, idFormation);
         return new ResponseEntity<>(newUser, HttpStatus.OK);
     }
 
     // pour  mettre à jour un utilisateur
    @PutMapping("maj/{iduser}")
 public ResponseEntity<UserEntity> updateUser(@PathVariable("iduser") long iduser, @RequestBody UserEntity updatedUser) {
-    UserEntity user = userService.updateUser(iduser, updatedUser.getFirstname(), updatedUser.getLastname(),
-            updatedUser.getPassword(), updatedUser.getEmail(), updatedUser.getRole() != null ? updatedUser.getRole().name() : null,
-            updatedUser.isActive(), updatedUser.isNotLocked(), updatedUser.getProfileImageURL());
+    UserEntity user = userService.updateUser(
+        iduser,
+        updatedUser.getFirstname(),
+        updatedUser.getLastname(),
+        updatedUser.getPassword(),
+        updatedUser.getEmail(),
+        updatedUser.getRole() != null ? updatedUser.getRole().name() : null,
+        updatedUser.isActive(),
+        updatedUser.isNotLocked(),
+        updatedUser.getProfileImageURL(),
+        updatedUser.getFormation() != null ? updatedUser.getFormation().getIdFormation() : null
+    );
 
     return new ResponseEntity<>(user, HttpStatus.OK);
 }
-    /*@PutMapping("maj/{iduser}")
-    public ResponseEntity<User> updateUser(
-        @PathVariable("iduser") long iduser,
-        @RequestParam("firstname") String firstname,
-        @RequestParam("lastname") String lastname,
-        @RequestParam("password") String password,
-        @RequestParam("email") String email,
-        @RequestParam("role") String role,
-        @RequestParam("active") String active,
-        @RequestParam("isNotLocked") String isNotLocked,
-        @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) {
-
-    User updatedUser = userService.updateUser(iduser, firstname, lastname, password, email, role,
-            Boolean.parseBoolean(active), Boolean.parseBoolean(isNotLocked), profileImage);
-
-    return new ResponseEntity<>(updatedUser, HttpStatus.OK);
-}*/
 
     //pour supprimer un utilisateur
     @DeleteMapping("delete/{iduser}")

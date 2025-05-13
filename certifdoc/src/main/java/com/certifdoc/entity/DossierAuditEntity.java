@@ -26,17 +26,13 @@ public class DossierAuditEntity {
 
     @Column(name = "url_pdf")
     private String urlPdf; // URL du fichier PDF du dossier
+
+    @Lob
+    @Column(name = "pdf_content", columnDefinition = "LONGBLOB")
+    private byte[] pdfContent;
  
-    @OneToMany(mappedBy = "dossierAudit", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    //  Relation One-to-Many : Un dossier contient plusieurs documents
+    @OneToMany(mappedBy = "dossierAudit", cascade = CascadeType.ALL)
     private List<DocumentEntity> documents;
-
-public void setDocuments(List<DocumentEntity> documents) {
-    this.documents = documents;
-}
-
-@Lob
-@Column(name = "pdf_content", columnDefinition = "LONGBLOB")
-private byte[] pdfContent;
-
     
 }

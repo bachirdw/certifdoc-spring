@@ -81,6 +81,20 @@ public class DocumentController {
             return ResponseEntity.internalServerError().build(); // 500
         }
     }
+  
+    // 🔍 Rechercher les documents par catégorie
+    @GetMapping("/categorie/{idCategorie}")
+    public ResponseEntity<List<DocumentEntity>> getDocumentsByCategorie(@PathVariable Long idCategorie) {
+        List<DocumentEntity> docs = documentService.getDocumentsByCategorie(idCategorie);
+        return ResponseEntity.ok(docs);
+    }
+
+    // 🔍 Rechercher les documents par mot-clé
+    @GetMapping("/keyword/{idKeyword}")
+    public ResponseEntity<List<DocumentEntity>> getDocumentsByKeyword(@PathVariable Long idKeyword) {
+        List<DocumentEntity> docs = documentService.getDocumentsByKeyword(idKeyword);
+        return ResponseEntity.ok(docs);
+    }
 
 
      

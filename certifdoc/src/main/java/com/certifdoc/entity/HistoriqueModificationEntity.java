@@ -15,10 +15,13 @@ public class HistoriqueModificationEntity {
     private Long idHistory;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "modification_date", nullable = false)
     private Date modificationDate;
 
+    @Column(name = "change_description", nullable = false)
     private String changeDescription;
-
+    
+    // Relation : chaque historique est lié à un document
     @ManyToOne
     @JoinColumn(name = "idDocument")
     private DocumentEntity document;

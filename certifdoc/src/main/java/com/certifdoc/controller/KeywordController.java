@@ -21,7 +21,7 @@ public class KeywordController {
     }
 
     // Récupérer un mot-clé par ID
-    @GetMapping("/{id}")
+    @GetMapping("/{idDocumentKeyword}")
     public KeywordEntity getKeywordById(@PathVariable Long id) {
         return keywordService.getKeywordById(id);
     }

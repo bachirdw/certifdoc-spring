@@ -1,5 +1,6 @@
 package com.certifdoc.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,5 +28,14 @@ public interface DocumentRepository extends JpaRepository<DocumentEntity, Long> 
         return findById(idDocument)
             .orElseThrow(() -> new DocumentNotFoundException("Document introuvable avec l'ID : " + idDocument));
     }
+
+ 
+    // Trouver tous les documents par catégorie (assure-toi que `categorie` est bien une entité reliée)
+    List<DocumentEntity> findByCategorie_IdCategorie(Long idCategorie);
+
+    
+    // Trouver tous les documents liés à un mot-clé
+    List<DocumentEntity> findByKeywords_IdKeyword(Long idKeyword);
+
 
 }

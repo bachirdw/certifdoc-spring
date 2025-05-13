@@ -13,13 +13,20 @@ public class NotificationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idNotification;
 
+    @Column(nullable = false)
     private String message;
+
+    @Column(nullable = false)
     private String type;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "send_date", nullable = false)
     private Date sendDate;
 
- /*    @ManyToOne
-    @JoinColumn(name = "idUser") // Relie la notification à un utilisateur
-    private UserEntity userEntity; // Utilisateur associé à la notification
+    //  Une notification appartient à un utilisateur
+    @ManyToOne(fetch = FetchType.LAZY)
 
-    */
+    @JoinColumn(name = "idUser", nullable = false)
+    private UserEntity utilisateur;
+
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -32,24 +33,18 @@ public class RegistrationLoginController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody UserEntity user) {
-        // Vérification de l'existence de l'utilisateur par email
-        if (userRepository.findByEmail(user.getEmail())!= null) {
-            return ResponseEntity.badRequest().body("Email already exists");
-        }
+    public ResponseEntity<UserEntity> registerUser(@RequestBody UserEntity user) {
+        UserEntity newUser = new UserEntity();
+        newUser.setFirstname(user.getFirstname());
+        newUser.setLastname(user.getLastname());
+        newUser.setEmail(user.getEmail());
+        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        newUser.setRole(user.getRole());
+        newUser.setActive(user.isActive());
+        newUser.setNotLocked(user.isNotLocked());
+        newUser.setFormation(user.getFormation());
 
-    UserEntity newUser = new UserEntity();
-    newUser.setFirstname(user.getFirstname());
-    newUser.setLastname(user.getLastname()); 
-    newUser.setEmail(user.getEmail());
-    // Mot de passe brut (non encodé ici, sera encodé plus tard)   
-    newUser.setPassword(passwordEncoder.encode(user.getPassword())); 
-// Enregistrement de l'utilisateur dans la base de données
-    return ResponseEntity.ok(userRepository.save(newUser)); 
-    
-
+        UserEntity savedUser = userRepository.save(newUser);
+        return new ResponseEntity<>(savedUser, HttpStatus.OK);
     }
-            
-
-
 }

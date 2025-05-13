@@ -30,7 +30,7 @@ public class DossierAuditService {
     public List<DossierAuditEntity> getAllDossiers() {
         return dossierAuditRepository.findAll();
     }
-
+// Récupérer un dossier par ID
     public DossierAuditEntity getDossierById(Long idDossierAudit) {
         return dossierAuditRepository.findById(idDossierAudit)
                 .orElseThrow(() -> new DossierAuditNotFoundException("❌ Dossier introuvable avec l'ID : " + idDossierAudit));
@@ -48,6 +48,7 @@ public class DossierAuditService {
         dossierAuditRepository.delete(dossierAudit);
     }
 
+ 
     /**
      * ✅ UC_VerifyCompleteness - Vérification complétude des documents
      */

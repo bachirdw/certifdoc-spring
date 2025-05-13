@@ -12,12 +12,13 @@ public class CategorieEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+   @Column(name = "idCategorie")
     private Long idCategorie;
 
     private String libelle;
 
-   /*  @OneToMany(mappedBy = "categorie")
+    //  Relation : une catégorie contient plusieurs documents
+    @OneToMany(mappedBy = "categorie", cascade = CascadeType.ALL)
     private List<DocumentEntity> documents;
-*/
     
 }

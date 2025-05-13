@@ -21,7 +21,7 @@ public class FormationController {
     }
 
     // Récupérer une formation par ID
-    @GetMapping("/{id}")
+    @GetMapping("/{idFormation}")
     public FormationEntity getFormationById(@PathVariable Long id) {
         return formationService.getFormationById(id);
     }
@@ -33,13 +33,13 @@ public class FormationController {
     }
 
     // Mettre à jour une formation existante
-    @PutMapping("/{id}")
+    @PutMapping("/{idFormation}")
     public FormationEntity updateFormation(@PathVariable Long id, @RequestBody FormationEntity formation) {
         return formationService.updateFormation(id, formation);
     }
 
     // Supprimer une formation
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{idFormation}")
     public void deleteFormation(@PathVariable Long id) {
         formationService.deleteFormation(id);
     }

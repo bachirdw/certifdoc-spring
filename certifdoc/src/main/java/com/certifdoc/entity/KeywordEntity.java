@@ -1,9 +1,12 @@
 package com.certifdoc.entity;
 
+import java.util.List;
+
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
-
+@Data
 @Table(name = "keyword_entity") // Évite tout conflit avec un mot-clé SQL
 public class KeywordEntity {
 
@@ -13,20 +16,8 @@ public class KeywordEntity {
 
     private String name;
 
-    // Getters et Setters
-    public Long getIdKeyword() {
-        return idKeyword;
-    }
-
-    public void setIdKeyword(Long idKeyword) {
-        this.idKeyword = idKeyword;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    // Relation Many-to-Many avec DocumentEntity via table de jointure
+    @ManyToMany(mappedBy = "keywords")
+    private List<DocumentEntity> documents;
 }
+

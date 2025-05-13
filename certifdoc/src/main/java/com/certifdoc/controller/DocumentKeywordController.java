@@ -1,6 +1,6 @@
 package com.certifdoc.controller;
 
-import com.certifdoc.entity.DocumentKeyword;
+import com.certifdoc.entity.DocumentKeywordEntity;
 import com.certifdoc.service.DocumentKeywordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,19 +16,19 @@ public class DocumentKeywordController {
 
     // Récupérer tous les mots-clés
     @GetMapping
-    public List<DocumentKeyword> getAllKeywords() {
+    public List<DocumentKeywordEntity> getAllKeywords() {
         return documentKeywordService.getAllKeywords();
     }
 
     // Récupérer un mot-clé par ID
     @GetMapping("/{id}")
-    public DocumentKeyword getKeywordById(@PathVariable Long id) {
+    public DocumentKeywordEntity getKeywordById(@PathVariable Long id) {
         return documentKeywordService.getKeywordById(id);
     }
 
     // Ajouter un mot-clé
     @PostMapping
-    public DocumentKeyword addKeyword(@RequestBody DocumentKeyword documentKeyword) {
+    public DocumentKeywordEntity addKeyword(@RequestBody DocumentKeywordEntity documentKeyword) {
         return documentKeywordService.addKeyword(documentKeyword);
     }
 }

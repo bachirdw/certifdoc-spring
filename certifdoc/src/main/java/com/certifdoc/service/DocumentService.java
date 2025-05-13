@@ -74,6 +74,15 @@ public class DocumentService {
     
         return savedDocument;
     }
+
+       //recuperer tous les documents d’une catégorie
+    public List<DocumentEntity> getDocumentsByCategorie(Long idCategorie) {
+        return documentRepository.findByCategorie_IdCategorie(idCategorie);
+    }
+    // Récupérer tous les documents associés à un mot-clé.
+    public List<DocumentEntity> getDocumentsByKeyword(Long idKeyword) {
+        return documentRepository.findByKeywords_IdKeyword(idKeyword);
+    }
     
     // Méthode pour supprimer un document par ID
     public void deleteDocumentById(Long idDocument) {

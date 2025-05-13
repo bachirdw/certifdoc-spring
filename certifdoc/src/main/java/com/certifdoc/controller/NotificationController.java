@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/notifications")
-public class NotificationEntityController {
+public class NotificationController {
 
     @Autowired
     private NotificationService notificationService;

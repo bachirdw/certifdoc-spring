@@ -14,11 +14,14 @@ public class FormationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idFormation;
 
+    @Column(nullable = false, unique = true)
     private String name;
+
     private String description;
 
-   /* @OneToMany(mappedBy = "formation")
-    private List<DocumentEntity> documents;
-*/
+      //  Relation : une formation est suivie par plusieurs utilisateurs
+      @OneToMany(mappedBy = "formation")
+      private List<UserEntity> utilisateurs;
+
    
 }
