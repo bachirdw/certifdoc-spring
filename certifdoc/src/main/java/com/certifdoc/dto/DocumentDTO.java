@@ -1,35 +1,20 @@
 package com.certifdoc.dto;
 
-// Objectif : Transport de données API
+import lombok.Data;
+import java.time.LocalDateTime;
+
+@Data
 public class DocumentDTO {
     private Long id;
     private String title;
-    private String content;
-
-    // Getters et setters (ou Lombok @Getter/@Setter)
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-
+    private String description;
+    private String type;
+    private LocalDateTime uploadDate;
+    private String version;
+    private String storageUrl;
+    private Long categorieId; // Only ID to avoid recursion
+    private Long userId;      // Only ID to avoid recursion
+    
+    // Optionnel : Si vous voulez inclure le nom de la catégorie
+    private String categorieLibelle; 
 }

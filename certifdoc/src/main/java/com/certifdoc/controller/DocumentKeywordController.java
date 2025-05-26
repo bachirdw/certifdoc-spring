@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/document-keywords")
+@CrossOrigin("*")
 public class DocumentKeywordController {
 
     @Autowired

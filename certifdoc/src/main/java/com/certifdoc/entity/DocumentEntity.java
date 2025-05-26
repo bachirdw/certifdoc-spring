@@ -1,6 +1,7 @@
 package com.certifdoc.entity;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +9,10 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 /**
 on isole les service pour les test unitaire
 
@@ -30,6 +35,7 @@ Sert à la persistance des données.
 @AllArgsConstructor
 //pour crer des objets automatiquement et les utilisé quand  on a besoin
 @Builder
+@Transactional
 
 public class DocumentEntity {
 
@@ -37,7 +43,6 @@ public class DocumentEntity {
     @Id
     // pour dire que id est auto incrémenté = génération automatique
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     @Column(name = "idDocument")
     private Long idDocument;
 
@@ -76,13 +81,25 @@ public class DocumentEntity {
 
     //  Relation  chaque document appartient à un utilisateur
     @ManyToOne
+    @JsonBackReference // pour éviter la récursivité infinie
     @JoinColumn(name = "idUser", nullable = true)
     private UserEntity utilisateur;
 
     //  Relation : chaque document appartient à une catégorie
-    @ManyToOne(fetch = FetchType.LAZY)
+    //@ManyToOne(fetch = FetchType.LAZY)
+    //@JoinColumn(name = "idCategorie")
+    //private CategorieEntity categorie;
+
+    @ManyToOne
     @JoinColumn(name = "idCategorie")
+    @JsonIgnore // Ignore complètement la sérialisation de la catégorie
     private CategorieEntity categorie;
+    
+    // Ajoutez cette méthode pour exposer seulement l'ID de la catégorie
+    @JsonProperty("categorieId")
+    public Long getCategorieId() {
+        return categorie != null ? categorie.getIdCategorie() : null;
+    }
 
     //  un document peut avoir plusieurs audits
     @ManyToOne

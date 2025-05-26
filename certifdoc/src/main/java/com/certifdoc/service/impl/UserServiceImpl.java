@@ -14,6 +14,21 @@ import com.certifdoc.repository.UserRepository;
 import com.certifdoc.repository.FormationRepository;
 import com.certifdoc.service.UserService;
 
+/**
+ * Contrôleur REST pour la gestion de l'inscription et de la connexion des utilisateurs.
+ * <p>
+ * - Fournit les endpoints pour l'inscription (/register) et la connexion (/login) des utilisateurs.
+ * - Utilise UserRepository pour accéder et sauvegarder les entités UserEntity en base de données.
+ * - Utilise PasswordEncoder pour sécuriser le stockage et la vérification des mots de passe.
+ * - Reçoit et retourne des objets UserEntity via des requêtes JSON.
+ * - Lors de l'inscription, permet d'associer une formation à l'utilisateur (relation ManyToOne avec FormationEntity).
+ * <p>
+ * Interactions principales :
+ * - UserEntity : entité représentant un utilisateur.
+ * - UserRepository : accès aux opérations CRUD sur les utilisateurs.
+ * - PasswordEncoder : encodage et vérification des mots de passe.
+ * - FormationEntity : association possible lors de l'inscription.
+ */
 @Service
 public class UserServiceImpl implements UserService {
 

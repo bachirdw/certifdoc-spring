@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.certifdoc.entity.DocumentEntity;
 import com.certifdoc.exception.DocumentNotFoundException;
+import com.certifdoc.repository.DocumentRepository;
 import com.certifdoc.service.DocumentService;
 
 import java.io.IOException;
@@ -36,13 +38,14 @@ Retourne une réponse HTTP (souvent JSON dans le cas d’une API REST).
  */
 @RestController
 @RequestMapping("/api/documents")
+@CrossOrigin("*")
 public class DocumentController {
    
     @Autowired
     private DocumentService documentService;
 
     //  pour récupérer tous les documents
-    @GetMapping
+     @GetMapping
     public List<DocumentEntity> getAllDocuments() {
         return documentService.getAllDocuments();
     }

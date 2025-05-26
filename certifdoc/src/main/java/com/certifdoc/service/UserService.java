@@ -10,5 +10,5 @@ public interface UserService {
     UserEntity findUserByEmail(String email);
     UserEntity addNewUser(String firstname, String lastname, String password, String email, String role, boolean isActive, boolean isNotLocked, MultipartFile profileImage, Long idFormation);
     void deleteUser(long iduser);
-    UserEntity updateUser(long iduser, String firstname, String lastname, String password, String email, String role, boolean isActive, boolean isNotLocked, String profileImage);
+    UserEntity updateUser(long iduser, String firstname, String lastname, String password, String email, String role, boolean isActive, boolean isNotLocked, String profileImage, Long idFormation);
 }

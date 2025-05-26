@@ -2,16 +2,21 @@ package com.certifdoc.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.certifdoc.entity.DocumentEntity;
 import com.certifdoc.entity.HistoriqueModificationEntity;
 import com.certifdoc.repository.DocumentRepository;
 import com.certifdoc.repository.HistoriqueModificationRepository;
+
+import jakarta.transaction.Transactional;
+
 import com.certifdoc.exception.DocumentNotFoundException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 /**
@@ -25,6 +30,7 @@ Facilite la maintenance, la réutilisation et les tests unitaires.
  */
 // anote la classe service
 @Service
+@Transactional // encapsule les requêtes SQL pour eviter les probleme de lazy loading
 public class DocumentService {
 
     @Autowired // pour instancier le repository automatiquement
@@ -33,10 +39,15 @@ public class DocumentService {
     @Autowired
     private HistoriqueModificationRepository historiqueRepository;
 
-
     // Méthode pour récupérer tous les documents
     public List<DocumentEntity> getAllDocuments() {
-        return documentRepository.findAll();
+        try {
+            return documentRepository.findAll();
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la récupération des documents : " + e.getMessage());
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
     }
     // Méthode pour récupérer un document par ID
     public DocumentEntity getDocumentById(Long idDocument) {
