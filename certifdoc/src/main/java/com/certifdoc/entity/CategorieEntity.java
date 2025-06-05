@@ -24,6 +24,7 @@ public class CategorieEntity {
 
     //  Relation : une catégorie contient plusieurs documents
     @OneToMany(mappedBy = "categorie", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"title", "description", "category", "type", "uploadDate", "version", "storageUrl", "fileSize", "fileHash", "filePath", "utilisateur", "categorie", "dossierAudit", "historiqueModifications"})
     private List<DocumentEntity> documents;
     
-}
+} 

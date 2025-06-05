@@ -26,7 +26,7 @@ public class DocumentKeywordEntity {
 
     // pour pouvoir filtrer par catégorie
     @ManyToOne
-@JoinColumn(name = "idCategorie")
-private CategorieEntity categorie;
+    @JoinColumn(name = "idCategorie")
+    private CategorieEntity categorie;
 
 }

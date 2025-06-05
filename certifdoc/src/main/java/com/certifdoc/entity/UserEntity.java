@@ -8,8 +8,7 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "utilisateur")
@@ -65,13 +64,16 @@ public class UserEntity {
 
     //  Documents créés par l'utilisateur
     @OneToMany(mappedBy = "utilisateur")
+    @JsonIgnoreProperties({"title", "description", "category", "type", "uploadDate", "version", "storageUrl", "fileSize", "fileHash", "filePath", "utilisateur", "categorie", "dossierAudit", "historiqueModifications"})
     private List<DocumentEntity> documents;
 
     //  Notifications reçues
     @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"message", "date", "utilisateur"})
     private List<NotificationEntity> notifications;
 
     // Logs des actions de l'utilisateur
     @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"action", "timestamp", "utilisateur"})
     private List<LogEntity> logs;
 }

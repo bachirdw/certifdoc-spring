@@ -2,6 +2,8 @@ package com.certifdoc.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,6 +20,7 @@ public class KeywordEntity {
 
     // Relation Many-to-Many avec DocumentEntity via table de jointure
     @ManyToMany(mappedBy = "keywords")
+    @JsonIgnoreProperties({"title", "description", "category", "type", "uploadDate", "version", "storageUrl", "fileSize", "fileHash", "filePath", "utilisateur", "categorie", "dossierAudit", "historiqueModifications"})
     private List<DocumentEntity> documents;
 }
 

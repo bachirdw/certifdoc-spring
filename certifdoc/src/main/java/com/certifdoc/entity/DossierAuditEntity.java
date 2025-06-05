@@ -6,6 +6,8 @@ import lombok.*;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "dossier_audit")
 @Data
@@ -33,6 +35,7 @@ public class DossierAuditEntity {
  
     //  Relation One-to-Many : Un dossier contient plusieurs documents
     @OneToMany(mappedBy = "dossierAudit", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"title", "description", "category", "type", "uploadDate", "version", "storageUrl", "fileSize", "fileHash", "filePath", "utilisateur", "categorie", "dossierAudit", "historiqueModifications"})
     private List<DocumentEntity> documents;
     
 }

@@ -5,6 +5,8 @@ import lombok.Data;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "formation")
 @Data
@@ -21,6 +23,7 @@ public class FormationEntity {
 
       //  Relation : une formation est suivie par plusieurs utilisateurs
       @OneToMany(mappedBy = "formation")
+      @JsonIgnoreProperties({"firstname","lastname","email","password","role","profileImageURL","authorities","joinDate","formation","documents","notifications"})
       private List<UserEntity> utilisateurs;
 
    

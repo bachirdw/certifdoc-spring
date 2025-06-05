@@ -12,6 +12,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 /**
 on isole les service pour les test unitaire
@@ -36,7 +37,6 @@ Sert à la persistance des données.
 //pour crer des objets automatiquement et les utilisé quand  on a besoin
 @Builder
 @Transactional
-
 public class DocumentEntity {
 
     // pour dire que id est la clé primaire
@@ -59,7 +59,7 @@ public class DocumentEntity {
     @Column(name = "type")
     private String type;
 
-    @Column(name = "upload_date", nullable = true, updatable = true)// true pour l'instant aprés changer false
+    @Column(name = "upload_date", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date uploadDate = new Date();
 
@@ -79,27 +79,15 @@ public class DocumentEntity {
     private String filePath;
 
 
-    //  Relation  chaque document appartient à un utilisateur
+    //  plusieur document appartient à un utilisateur
     @ManyToOne
-    @JsonBackReference // pour éviter la récursivité infinie
     @JoinColumn(name = "idUser", nullable = true)
     private UserEntity utilisateur;
 
-    //  Relation : chaque document appartient à une catégorie
-    //@ManyToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name = "idCategorie")
-    //private CategorieEntity categorie;
-
     @ManyToOne
     @JoinColumn(name = "idCategorie")
-    @JsonIgnore // Ignore complètement la sérialisation de la catégorie
     private CategorieEntity categorie;
     
-    // Ajoutez cette méthode pour exposer seulement l'ID de la catégorie
-    @JsonProperty("categorieId")
-    public Long getCategorieId() {
-        return categorie != null ? categorie.getIdCategorie() : null;
-    }
 
     //  un document peut avoir plusieurs audits
     @ManyToOne
@@ -108,6 +96,7 @@ public class DocumentEntity {
 
     //  Historique des modifications (One-to-Many)
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties ({"modificationDate","changeDescription","document"})
     private List<HistoriqueModificationEntity> historiqueModifications;
 
     // Relation Many-to-Many avec mots-clés via table de jointure
@@ -117,6 +106,7 @@ public class DocumentEntity {
         joinColumns = @JoinColumn(name = "idDocument"),
         inverseJoinColumns = @JoinColumn(name = "idKeyword")
     )
+    @JsonIgnoreProperties ({"name","documents"})
     private List<KeywordEntity> keywords;
 
 

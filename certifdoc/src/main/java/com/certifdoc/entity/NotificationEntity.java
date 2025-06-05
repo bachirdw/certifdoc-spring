@@ -25,7 +25,6 @@ public class NotificationEntity {
 
     //  Une notification appartient à un utilisateur
     @ManyToOne(fetch = FetchType.LAZY)
-
     @JoinColumn(name = "idUser", nullable = false)
     private UserEntity utilisateur;
 

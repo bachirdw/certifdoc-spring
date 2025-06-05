@@ -38,7 +38,7 @@ Retourne une réponse HTTP (souvent JSON dans le cas d’une API REST).
  */
 @RestController
 @RequestMapping("/api/documents")
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:4200")
 public class DocumentController {
    
     @Autowired

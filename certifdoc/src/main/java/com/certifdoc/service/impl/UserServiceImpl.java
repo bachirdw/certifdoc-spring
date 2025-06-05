@@ -1,34 +1,17 @@
 package com.certifdoc.service.impl;
 
-import java.util.Optional;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import com.certifdoc.entity.UserEntity;
 import com.certifdoc.entity.FormationEntity;
 import com.certifdoc.entity.RoleEntity;
-import com.certifdoc.entity.UserEntity;
 import com.certifdoc.repository.UserRepository;
 import com.certifdoc.repository.FormationRepository;
 import com.certifdoc.service.UserService;
+import java.util.List;
+import java.util.Optional;
 
-/**
- * Contrôleur REST pour la gestion de l'inscription et de la connexion des utilisateurs.
- * <p>
- * - Fournit les endpoints pour l'inscription (/register) et la connexion (/login) des utilisateurs.
- * - Utilise UserRepository pour accéder et sauvegarder les entités UserEntity en base de données.
- * - Utilise PasswordEncoder pour sécuriser le stockage et la vérification des mots de passe.
- * - Reçoit et retourne des objets UserEntity via des requêtes JSON.
- * - Lors de l'inscription, permet d'associer une formation à l'utilisateur (relation ManyToOne avec FormationEntity).
- * <p>
- * Interactions principales :
- * - UserEntity : entité représentant un utilisateur.
- * - UserRepository : accès aux opérations CRUD sur les utilisateurs.
- * - PasswordEncoder : encodage et vérification des mots de passe.
- * - FormationEntity : association possible lors de l'inscription.
- */
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -44,41 +27,58 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity findUserByLastname(String lastname) {
-        return userRepository.findByFirstname(lastname);
-    }
+public UserEntity findUserByLastname(String lastname) {
+    return userRepository.findByLastname(lastname).orElse(null);
+}
 
     @Override
     public UserEntity findUserByEmail(String email) {
-        return userRepository.findByLastname(email);
+        return userRepository.findByEmail(email).orElse(null);
     }
 
-//pour ajouter un utilisateur
-@Override
-public UserEntity addNewUser(String firstname, String lastname, String password, String email, String role,
-boolean isActive, boolean isNotLocked, MultipartFile profileImage, Long idFormation) {
-UserEntity user = new UserEntity();
-user.setFirstname(firstname);
-user.setLastname(lastname);
-user.setPassword(password);
-user.setEmail(email);
-user.setRole(RoleEntity.valueOf(role.toUpperCase()));
-user.setActive(isActive);
-user.setNotLocked(isNotLocked);
-
-if (idFormation != null) {
-FormationEntity formation = formationRepository.findById(idFormation)
-    .orElseThrow(() -> new RuntimeException("Formation non trouvée"));
-user.setFormation(formation);
-}
-
-return userRepository.save(user);
-}
-
-// pour mettre ajouter un utilisateur
     @Override
-    public UserEntity updateUser(long iduser, String firstname, String lastname, String password, String email, String role,
-            boolean isActive, boolean isNotLocked, String profileImage, Long idFormation) {
+    public UserEntity saveUser(UserEntity user) {
+        return userRepository.save(user);
+    }
+
+@Override
+public UserEntity addNewUser(String firstname, String lastname, String password, String email, RoleEntity role,
+         boolean isActive, boolean isNotLocked, MultipartFile profileImage, Long idFormation) {
+    
+    UserEntity user = new UserEntity();
+    user.setFirstname(firstname);
+    user.setLastname(lastname);
+    user.setPassword(password);
+    user.setEmail(email);
+    user.setRole(role);
+    user.setActive(isActive);
+    user.setNotLocked(isNotLocked);
+
+    // Traitement de l'image
+    if (profileImage != null && !profileImage.isEmpty()) {
+        try {
+            // Exemple de traitement d'image
+            String fileName = profileImage.getOriginalFilename();
+            user.setProfileImageURL(fileName); // à adapter à ta logique métier
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors du traitement de l'image : " + e.getMessage());
+        }
+    }
+
+    // Lier la formation si elle existe
+    if (idFormation != null) {
+        Optional<FormationEntity> formation = formationRepository.findById(idFormation);
+        formation.ifPresent(user::setFormation);
+    }
+
+    return userRepository.save(user); 
+}
+
+
+
+    @Override
+    public UserEntity updateUser(long iduser, String firstname, String lastname, String password, String email, RoleEntity role,
+                                 boolean isActive, boolean isNotLocked, String profileImage, Long idFormation) {
         Optional<UserEntity> optionalUser = userRepository.findById(iduser);
         if (!optionalUser.isPresent()) {
             throw new RuntimeException("Utilisateur avec l'ID " + iduser + " non trouvé !");
@@ -88,20 +88,13 @@ return userRepository.save(user);
         user.setLastname(lastname);
         user.setPassword(password);
         user.setEmail(email);
-        user.setRole(RoleEntity.valueOf(role.toUpperCase()));
+        user.setRole(role);
         user.setActive(isActive);
         user.setNotLocked(isNotLocked);
-        
-        if (idFormation != null) {
-            FormationEntity formation = formationRepository.findById(idFormation)
-                .orElseThrow(() -> new RuntimeException("Formation non trouvée"));
-            user.setFormation(formation);
-        }
-
+    
         return userRepository.save(user);
     }
 
-    //pour supprimer un utilisateur
     @Override
     public void deleteUser(long iduser) {
         if (userRepository.existsById(iduser)) {

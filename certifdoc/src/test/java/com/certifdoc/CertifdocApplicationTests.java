@@ -8,6 +8,7 @@ class CertifdocApplicationTests {
 
 	@Test
 	void contextLoads() {
+		  // Si le contexte de l'application ne se charge pas, ce test échouera
 	}
 
 }

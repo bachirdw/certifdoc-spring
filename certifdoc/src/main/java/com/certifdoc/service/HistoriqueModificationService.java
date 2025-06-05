@@ -1,6 +1,5 @@
 package com.certifdoc.service;
 
-import com.certifdoc.dto.HistoriqueModificationDTO;
 import com.certifdoc.entity.HistoriqueModificationEntity;
 import com.certifdoc.exception.ResourceNotFoundException;
 import com.certifdoc.repository.HistoriqueModificationRepository;
@@ -37,30 +36,29 @@ public class HistoriqueModificationService {
                 .orElseThrow(() -> new ResourceNotFoundException("Historique introuvable avec l'ID : " + idHistory));
     }
 
-    // Méthode pour ajouter un nouvel historique
-    public HistoriqueModificationEntity addHistorique(HistoriqueModificationDTO dto) {
-        HistoriqueModificationEntity historique = new HistoriqueModificationEntity();
-        historique.setModificationDate(dto.getModificationDate() != null ? dto.getModificationDate() : new Date());
-        historique.setChangeDescription(dto.getChangeDescription());
-        return historiqueRepository.save(historique);
+        // ➕ Méthode pour ajouter un nouvel historique
+        public HistoriqueModificationEntity addHistorique(HistoriqueModificationEntity historique) {
+            historique.setModificationDate(historique.getModificationDate() != null ? historique.getModificationDate() : new Date());
+            return historiqueRepository.save(historique);
+        }
+    
+
+        // 🔁 Méthode pour mettre à jour un historique existant
+        public HistoriqueModificationEntity updateHistorique(Long idHistory, HistoriqueModificationEntity historique) {
+            HistoriqueModificationEntity existing = historiqueRepository.findById(idHistory)
+                    .orElseThrow(() -> new ResourceNotFoundException("Historique introuvable avec l'ID : " + idHistory));
+    
+            existing.setModificationDate(historique.getModificationDate());
+            existing.setChangeDescription(historique.getChangeDescription());
+    
+            return historiqueRepository.save(existing);
+        }
+    
+        // ❌ Méthode pour supprimer un historique par ID
+        public void deleteHistorique(Long idHistory) {
+            HistoriqueModificationEntity historique = historiqueRepository.findById(idHistory)
+                    .orElseThrow(() -> new ResourceNotFoundException("Historique introuvable avec l'ID : " + idHistory));
+    
+            historiqueRepository.delete(historique);
+        }
     }
-
-    // Méthode pour mettre à jour un historique existant
-    public HistoriqueModificationEntity updateHistorique(Long idHistory, HistoriqueModificationDTO dto) {
-        HistoriqueModificationEntity existing = historiqueRepository.findById(idHistory)
-                .orElseThrow(() -> new ResourceNotFoundException("Historique introuvable avec l'ID : " + idHistory));
-
-        existing.setModificationDate(dto.getModificationDate());
-        existing.setChangeDescription(dto.getChangeDescription());
-
-        return historiqueRepository.save(existing);
-    }
-
-    // Méthode pour supprimer un historique par ID
-    public void deleteHistorique(Long idHistory) {
-        HistoriqueModificationEntity historique = historiqueRepository.findById(idHistory)
-                .orElseThrow(() -> new ResourceNotFoundException("Historique introuvable avec l'ID : " + idHistory));
-
-        historiqueRepository.delete(historique);
-    }
-}

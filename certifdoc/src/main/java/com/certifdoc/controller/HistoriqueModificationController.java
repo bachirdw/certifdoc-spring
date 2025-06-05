@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.certifdoc.dto.HistoriqueModificationDTO;
 import com.certifdoc.entity.HistoriqueModificationEntity;
 import com.certifdoc.exception.ResourceNotFoundException;
 import com.certifdoc.service.HistoriqueModificationService;
@@ -44,24 +43,25 @@ public class HistoriqueModificationController {
 
     // ➕ Ajouter un nouvel historique
     @PostMapping
-    public HistoriqueModificationEntity addHistorique(@RequestBody HistoriqueModificationDTO dto) {
-        return historiqueService.addHistorique(dto);
+    public HistoriqueModificationEntity addHistorique(@RequestBody HistoriqueModificationEntity historique) {
+        return historiqueService.addHistorique(historique);
     }
 
-    // 🔁 Modifier un historique existant
+    // Modifier un historique existant
     @PutMapping("/{idHistory}")
     public ResponseEntity<HistoriqueModificationEntity> updateHistorique(
-            @PathVariable Long id,
-            @RequestBody HistoriqueModificationDTO dto) {
+            @PathVariable Long idHistory,
+            @RequestBody HistoriqueModificationEntity historique) {
         try {
-            HistoriqueModificationEntity updated = historiqueService.updateHistorique(id, dto);
+            HistoriqueModificationEntity updated = historiqueService.updateHistorique(idHistory, historique);
             return ResponseEntity.ok(updated);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    // ❌ Supprimer un historique
+
+    // Supprimer un historique
     @DeleteMapping("/{idHistory}")
     public ResponseEntity<Void> deleteHistorique(@PathVariable Long id) {
         try {

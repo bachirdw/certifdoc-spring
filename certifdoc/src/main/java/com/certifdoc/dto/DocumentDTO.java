@@ -12,8 +12,8 @@ public class DocumentDTO {
     private LocalDateTime uploadDate;
     private String version;
     private String storageUrl;
-    private Long categorieId; // Only ID to avoid recursion
-    private Long userId;      // Only ID to avoid recursion
+    private Long categorieId; //recupération de l'ID eu lieu de passer l'objet entier pour éviter la récursion infinie
+    private Long userId;      // recupération de l'ID eu lieu de passer l'objet entier pour éviter la récursion infinie 
     
     // Optionnel : Si vous voulez inclure le nom de la catégorie
     private String categorieLibelle; 
