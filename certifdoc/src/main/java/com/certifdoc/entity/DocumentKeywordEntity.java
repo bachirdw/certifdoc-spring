@@ -17,7 +17,7 @@ public class DocumentKeywordEntity {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "idDocument") // Relie le mot-clé à un document
+    @JoinColumn(name = "idDocument", nullable = false) // Relie le mot-clé à un document
     private DocumentEntity document;
     
     @ManyToOne
@@ -26,7 +26,7 @@ public class DocumentKeywordEntity {
 
     // pour pouvoir filtrer par catégorie
     @ManyToOne
-    @JoinColumn(name = "idCategorie")
+    @JoinColumn(name = "idCategorie", nullable = false) // Relie le document à une catégorie
     private CategorieEntity categorie;
 
 }

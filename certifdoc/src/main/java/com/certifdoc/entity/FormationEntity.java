@@ -16,7 +16,7 @@ public class FormationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idFormation;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     private String description;

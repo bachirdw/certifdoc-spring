@@ -29,13 +29,25 @@ public class SecurityConfig {
             .cors(withDefaults()) // Activation du CORS
             .csrf(csrf -> csrf.disable()) // Désactivation CSRF
             .authorizeHttpRequests(auth -> auth
-              // .requestMatchers( "/**").permitAll()
-             .requestMatchers("/api/auth/**").permitAll()
-               // .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
-                .anyRequest().authenticated()
+            .requestMatchers("/api/auth/**").permitAll()
+             // Autorise les requêtes selon les rôles
+            .requestMatchers(HttpMethod.POST, "/api/**").hasAnyRole("FORMATEUR")
+            .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("FORMATEUR")
+            .requestMatchers(HttpMethod.PUT, "/api/**").hasAnyRole("FORMATEUR")
+
+            .requestMatchers(HttpMethod.POST, "/api/**").hasAnyRole("ADMIN")
+            .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("ADMIN")
+            .requestMatchers(HttpMethod.PUT, "/api/**").hasAnyRole("ADMIN")
+            .requestMatchers(HttpMethod.DELETE, "/api/**").hasAnyRole("ADMIN")
+
+            .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("AUDITEUR")
+            // toutes les autres requêtes nécessitent une authentification
+            .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            // Ajout du filtre JWT avant le filtre UsernamePasswordAuthenticationFilter
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+           //construction de l'objet SecurityFilterChain
             .build();
     }
 

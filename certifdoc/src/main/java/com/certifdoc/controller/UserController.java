@@ -59,7 +59,7 @@ public class UserController {
         if (user == null || user.getEmail() == null) {
             throw new IllegalArgumentException("Utilisateur invalide ou email manquant pour la génération du JWT");
         }
-    
+    //il met le aurithorization dans l'en-tête
         String token = jwtUtil.generateJwtToken(user);
         headers.set("Authorization", "Bearer " + token);
     

@@ -81,17 +81,17 @@ public class DocumentEntity {
 
     //  plusieur document appartient à un utilisateur
     @ManyToOne
-    @JoinColumn(name = "idUser", nullable = true)
+    @JoinColumn(name = "idUser", nullable = false)
     private UserEntity utilisateur;
 
     @ManyToOne
-    @JoinColumn(name = "idCategorie")
+    @JoinColumn(name = "idCategorie", nullable = false)
     private CategorieEntity categorie;
     
 
     //  un document peut avoir plusieurs audits
     @ManyToOne
-    @JoinColumn(name = "idDossierAudit")
+    @JoinColumn(name = "idDossierAudit", nullable = false)
     private DossierAuditEntity dossierAudit;
 
     //  Historique des modifications (One-to-Many)
